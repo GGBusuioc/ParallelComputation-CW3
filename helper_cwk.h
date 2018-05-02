@@ -68,13 +68,6 @@ void initialiseArrays( float *gradients, float *inputs, float *weights, int N, i
 	for( i=0; i<  M; i++ ) inputs   [i] = 1.0 * rand() / RAND_MAX;
 	for( i=0; i<N*M; i++ ) weights  [i] = 1.0 * rand() / RAND_MAX;
 
-
-
-	printf("Initial values of the weights:\n");
-	for( i=0; i<N*M; i++)
-		printf("%f\n", weights[i]);
-
-
 }
 
 

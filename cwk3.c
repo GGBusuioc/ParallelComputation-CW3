@@ -41,18 +41,18 @@ int main( int argc, char **argv )
 		*weights   = (float*) malloc( (N*M)*sizeof(float) );
 	initialiseArrays( gradients, inputs, weights, N, M );			// DO NOT REMOVE.
 
-	//
+
+
 	// Implement a kernel to do these calculations
 	//
 	cl_mem device_gradients = clCreateBuffer( context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, N*sizeof(float), gradients, &status );
-	if(status==CL_SUCCESS)
-		printf("Successful GRADIENTS\n");
+
 	cl_mem device_inputs = clCreateBuffer( context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, M*sizeof(float), inputs, &status );
-	if(status==CL_SUCCESS)
-		printf("Successful INPUTS\n");
-	cl_mem device_weights = clCreateBuffer( context, CL_MEM_WRITE_ONLY                     , (N*M)*sizeof(float), NULL  , &status );
-	if(status==CL_SUCCESS)
-		printf("Successful WEIGHTS\n");
+
+	cl_mem device_weights = clCreateBuffer( context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR  , (N*M)*sizeof(float), weights  , &status );
+
+
+	// Building a kernel
 	cl_kernel kernel = compileKernelFromFile( "vectorComputation.cl", "vectorComputation", context, device );
 
 
@@ -77,9 +77,8 @@ int main( int argc, char **argv )
 		return EXIT_FAILURE;
 	}
 
-	//
-	// Get the result back from the device to the host, and check.
-	//
+
+	// Getting the results back to the host
 	status = clEnqueueReadBuffer( queue, device_weights, CL_TRUE, 0, N*M*sizeof(float), weights, 0, NULL, NULL );
 	if( status != CL_SUCCESS )
 	{
